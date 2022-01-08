@@ -13,9 +13,13 @@ import "./App.css";
  * understand the existing code (although you don't need
  * to fully understand everything to move on)
  */
-
+ /**
+     * Lazily initialize our `notes` state so it doesn't
+     * reach into localStorage on every single re-render
+     * of the App component
+     */
 export default function App() {
-  const [notes, setNotes] = React.useState(
+  const [notes, setNotes] = React.useState(()=>
     JSON.parse(localStorage.getItem("notes")) || []
   );
   const [currentNoteId, setCurrentNoteId] = React.useState(
