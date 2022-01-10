@@ -13,14 +13,14 @@ import "./App.css";
  * understand the existing code (although you don't need
  * to fully understand everything to move on)
  */
- /**
-     * Lazily initialize our `notes` state so it doesn't
-     * reach into localStorage on every single re-render
-     * of the App component
-     */
+/**
+ * Lazily initialize our `notes` state so it doesn't
+ * reach into localStorage on every single re-render
+ * of the App component
+ */
 export default function App() {
-  const [notes, setNotes] = React.useState(()=>
-    JSON.parse(localStorage.getItem("notes")) || []
+  const [notes, setNotes] = React.useState(
+    () => JSON.parse(localStorage.getItem("notes")) || []
   );
   const [currentNoteId, setCurrentNoteId] = React.useState(
     (notes[0] && notes[0].id) || ""
@@ -37,7 +37,7 @@ export default function App() {
 
   function updateNote(text) {
     // This code moves the modified notes tio the top
-   setNotes(oldNotes =>{
+    setNotes((oldNotes) => {
       let newArray = [];
       for (let i = 0; i < oldNotes.length; i++) {
         const oldNote = oldNotes[i];
@@ -48,7 +48,7 @@ export default function App() {
         }
       }
       return newArray;
-   })
+    });
   }
 
   // function updateNote(text) {
@@ -60,6 +60,13 @@ export default function App() {
   //     })
   //   );
   // }
+
+  function deleteNote(event, noteId) {
+    event.stopPropagation();
+    // Your code here
+    //console.log("clicked delete button", noteId);
+    setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
+  }
 
   function findCurrentNote() {
     return (
@@ -77,6 +84,7 @@ export default function App() {
       {notes.length > 0 ? (
         <Split sizes={[30, 70]} direction="horizontal" className="split">
           <Sidebar
+            deleteNote={deleteNote}
             notes={notes}
             currentNote={findCurrentNote()}
             setCurrentNoteId={setCurrentNoteId}
